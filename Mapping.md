@@ -9,15 +9,17 @@ Para ejecutar el paquete se requiere un robot con odometría y un láser horizon
 
 ## Configuración inicial
 
-TODO: Describir el proceso de conexión al master y exportación de ip's.
-    //Por ethernet 
-        Uvetro tiene por default la ip 148.226.110.80
+Proceso de conexión al master y exportación de ip's.
+<br>
+    Por ethernet: 
+        <br>
+        Uverto tiene por default la ip 148.226.110.80, por lo que tendremos que conectarnos a esa ip mediante ssh:
 
         ssh jhermosilla@148.226.110.80
         Esto solicitará una contraseña: iiia2024
 
 
-    //Por wifi
+    Por wifi
         Verificar que la nuc y la computadora esclavo con la cual se comunicará se encuentren en la misma red wifi.
         Verificar la Ip de la nuc (ya que es dinámica) y conectarse a la ip de la nuc.
         En este caso, la ip ha sido 192.168.0.102
@@ -38,12 +40,14 @@ TODO: Describir el proceso de conexión al master y exportación de ip's.
     sudo shutdown -h now
 
 ## Recomendaciones para realizar el mapeo
-> Antes de realizar el mapeo, debemos de asegurarnos que el lugar que escanearemos deb de encontrarse de preferencia sin personas u objetos en movimiento.
+>Antes de realizar el mapeo, debemos de asegurarnos que el lugar que escanearemos deb de encontrarse de preferencia sin personas u objetos en movimiento.
+<br>
 Esto debido a que ek escaner detectará estos movimientos.
-> Considerar la altura del láser. Si utilizará un laser horizontal, hay que tener en cuenta que sólo detectará los objetos a su altura, si hjay objetos más bajos 
-  o más altos, no los podrá visualizar, por lo que habá que adaptarlos para que el láser pueda verlos. Por ejemplo, si tenemos una mesa de 4 patas, el láser sólo detectará las paras de la mesa, pero no la altura de la mesa, por lo que puede detecat como espacio libre debajo de la mesa, lo cual no sería lo ideal. Para corregir esto, podríamos ponerle un mantel a la mesa para que el láser lo detecte como una pared y evite pasar por ahí.
-> Cuidado con el vidrio. El láser traspasa el cristal, por lo que si hay algún vidrio o una puerta de cristal, el robot no la va a detectar, por lo que igual se recomienda recurbirla. 
-> Deja todo en su lugar. Recuerda que si después de realizar el mapeo, reorganizan el entorno, el robot tendrá guardado el mapa de cómo estaba acomodado anteriormente, por lo que si se mueve algo, se tenría que realizar nuevamente el mapeo.
+Considerar la altura del láser. Si utilizará un laser horizontal, hay que tener en cuenta que sólo detectará los objetos a su altura, si hjay objetos más bajos o más altos, no los podrá visualizar, por lo que habá que adaptarlos para que el láser pueda verlos. Por ejemplo, si tenemos una mesa de 4 patas, el láser sólo detectará las paras de la mesa, pero no la altura de la mesa, por lo que puede detecat como espacio libre debajo de la mesa, lo cual no sería lo ideal. Para corregir esto podríamos ponerle un mantel a la mesa para que el láser lo detecte como una pared y evite pasar por ahí.
+<br>
+Cuidado con el vidrio. El láser traspasa el cristal, por lo que si hay algún vidrio o una puerta de cristal, el robot no la va a detectar, por lo que igual se recomienda recurbirla.
+<br> 
+Deja todo en su lugar. Recuerda que si después de realizar el mapeo, reorganizan el entorno, el robot tendrá guardado el mapa de cómo estaba acomodado anteriormente, por lo que si se mueve algo, se tenría que realizar nuevamente el mapeo.
 
 ## Ejecutar el launcher para crear el mapa
 
