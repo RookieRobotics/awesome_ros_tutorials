@@ -1,6 +1,6 @@
 # Mapeo 🗺️
 
-> El proceso de mapeo empleado comúnmente se denomina SLAM (simultaneous localization and mapping por sus siglas en inglés) y se compone de algoritmos para la estimación de la posición y creación de mapas de costos.
+> El proceso de mapeo empleado comúnmente se denomina SLAM (simultaneous localization and mapping por sus siglas en inglés) y se compone de algoritmos para la estimación de la posición y creación de mapas.
 
 <br>
 
@@ -9,47 +9,50 @@ Para ejecutar el paquete se requiere un robot con odometría y un láser horizon
 
 ## Configuración inicial
 
-Proceso de conexión al master y exportación de ip's.
+> :memo: **Nota:** Para manipular el robot es necesario configurar un método de comunicación del tipo *master-slave*. El *master* representa la computadora del robot y es donde se publican los tópicos que provienen del robot. Los *slaves* son todas las computadoras que desean conectarse de manera remota al robot con el fin de suscribirse a sus tópicos.
+
+Para configurar el *master*, tenemos dos alternativas para relizar la conexión: usar la red ethernet o wifi.
+
+- Si usaremos una conexión ethernet es necesario saber la dirección ip de la computadora del robot. En este ejemplo asumiremos que la ip es 148.226.110.80. Tendremos que conectarnos a dicha ip mediante ssh:
+
+```console
+user@localhost:~$ ssh usuario@148.226.110.80
+```
+
+- Si usaremos una conexión wifi también es necesario conocer la dirección ip, ya que la red asigna una dirección diferente en ambos casos. Es necesario que la computadora *master* y la computadora *slave* se encuentren en la misma red wifi. En este ejemplo asumiremos que la ip es 192.168.0.102.
+
+```console
+user@localhost:~$ ssh usuario@ssh jhermosilla@192.168.0.102
+```
+
+Al entrar a la computadora del *master* es necesario exportar las siguientes variables en cada terminal que se utilice:
+
+```console
+user@localhost:~$ export ROS_MASTER_URI=http://ip_del_master:11311
+user@localhost:~$ export ROS_IP=ip_del_master
+```
+
 <br>
-    Por ethernet: 
-        <br>
-        Uverto tiene por default la ip 148.226.110.80, por lo que tendremos que conectarnos a esa ip mediante ssh:
 
-        ssh jhermosilla@148.226.110.80
-        Esto solicitará una contraseña: iiia2024
+> :bulb: **Tip:** Para apagar al robot (i.e., la computadora del *master*) de manera remota, se ejecuta el siguiente comando.
 
+```console
+user@localhost:~$ sudo shutdown -h now
+```
 
-    Por wifi
-        Verificar que la nuc y la computadora esclavo con la cual se comunicará se encuentren en la misma red wifi.
-        Verificar la Ip de la nuc (ya que es dinámica) y conectarse a la ip de la nuc.
-        En este caso, la ip ha sido 192.168.0.102
+## Recomendaciones antes de realizar el mapeo
 
-        ssh jhermosilla@192.168.0.102
-        Esto solicitará una contraseña: iiia2024
+> :warning: **Precaución:** Antes de realizar el mapeo, es recomendable asegurarnos que el lugar que escanearemos no contiene personas u objetos en movimiento ya que el escaner detectará estos movimientos.
+ 
+Ya que se utiliza un laser horizontal es necesario considerar la altura del láser, debido a que sólo detectará los objetos a su altura, si hay objetos más pequeños o altos, no serán escaneados. Es recomendable adaptar el ambiente para que el láser pueda considerarlos. Por ejemplo, si tenemos una mesa de 4 bases, el láser sólo detectará las bases de la mesa, pero no el tablero en la parte superior, por lo que el espacio libre detectado debajo de la mesa no correspondería a su *footprint*. Para corregir esto se recomienda usar un mantel, de modo que el láser lo detecte como una pared y evite pasar por ahí.
 
-        realizar los siguiente export en cada terminal que se utilice:
+> :warning: **Precaución:** Hay que tener cuidado con el vidrio. El láser traspasa el cristal, por lo que si hay algún vidrio o una puerta de cristal, no será considerada durante el mapeo, por lo que se recomienda cubrirlo o evitarlo.
 
-        export ROS_MASTER_URI=http://ipMaster:11311
-        export ROS_IP=ipMaster
+Ya que el entorno puede cambiar, se recomienda marcar con cinta u otra alternativa la posición en el piso de los obstáculos que podrían moverse posterior al mapeo.
 
-        Lo cual quedaría de la siguiente manera con la IP dada:
-        export ROS_MASTER_URI=http://192.168.0.102:11311
-        export ROS_IP=192.168.0.102
+> :bulb: **Tip:** Deja todo en su lugar. Recuerda que al reorganizar el entorno, el mapa escaneado previamente no va a corresponder al entorno actual.
 
-    NOTA: Para apagar al robot (la nuc) de manera remota, ejecutar el siguiente comando:
-    sudo shutdown -h now
-
-## Recomendaciones para realizar el mapeo
->Antes de realizar el mapeo, debemos de asegurarnos que el lugar que escanearemos deb de encontrarse de preferencia sin personas u objetos en movimiento.
-<br>
-Esto debido a que ek escaner detectará estos movimientos.
-Considerar la altura del láser. Si utilizará un laser horizontal, hay que tener en cuenta que sólo detectará los objetos a su altura, si hjay objetos más bajos o más altos, no los podrá visualizar, por lo que habá que adaptarlos para que el láser pueda verlos. Por ejemplo, si tenemos una mesa de 4 patas, el láser sólo detectará las paras de la mesa, pero no la altura de la mesa, por lo que puede detecat como espacio libre debajo de la mesa, lo cual no sería lo ideal. Para corregir esto podríamos ponerle un mantel a la mesa para que el láser lo detecte como una pared y evite pasar por ahí.
-<br>
-Cuidado con el vidrio. El láser traspasa el cristal, por lo que si hay algún vidrio o una puerta de cristal, el robot no la va a detectar, por lo que igual se recomienda recurbirla.
-<br> 
-Deja todo en su lugar. Recuerda que si después de realizar el mapeo, reorganizan el entorno, el robot tendrá guardado el mapa de cómo estaba acomodado anteriormente, por lo que si se mueve algo, se tenría que realizar nuevamente el mapeo.
-
-## Ejecutar el launcher para crear el mapa
+## Ejecución del paquete
 
 Una vez dentro de uberto, ejetucar el siguiente launcher:
 roslaunch uverto uverto_mapping.launch
